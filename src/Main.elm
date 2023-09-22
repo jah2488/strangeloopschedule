@@ -106,10 +106,10 @@ view model =
         styleMode =
             case model.styleMode of
                 Dark ->
-                    "Light"
+                    "Dark"
 
                 Light ->
-                    "Dark"
+                    "Light"
     in
     div [ Attr.class <| "container " ++ styleMode ]
         [ h1 [] [ text "Strangeloop 2023 Friday Schedule" ]

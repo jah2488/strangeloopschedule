@@ -11,6 +11,7 @@ body {
 
 h1 {
   font-size: 30px;
+  color: var(--foreground);
 }
 
 img {
@@ -30,7 +31,7 @@ body {
     --background: #1D1F20;
     --background-lighter: #2f3234;
     --foreground: #fff;
-    --link: #f79533;
+    --link: #96cd4a;
   }
 }
 
@@ -48,13 +49,11 @@ a {
   text-decoration: none;
 }
 
-
 .container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* height: 100%; */
   width: 100%;
 }
 
@@ -62,7 +61,7 @@ a {
   --background: #1D1F20;
   --background-lighter: #2f3234;
   --foreground: #fff;
-  --link: #f79533;
+  --link: #96cd4a;
 }
 
 .container.Light {
@@ -81,7 +80,7 @@ body {
 
 .box {
   width: 300px;
-  min-height: 170px;
+  min-height: 150px;
   color: var(--foreground);
   font-family: 'Raleway';
   font-size: 1.2rem;
@@ -91,7 +90,6 @@ body {
 
 .title {
   flex: 1;
-  display: flex;
   width: 100%;
 }
 
