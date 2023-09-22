@@ -113,8 +113,8 @@ view model =
     in
     div [ Attr.class <| "container " ++ styleMode ]
         [ h1 [] [ text "Strangeloop 2023 Friday Schedule" ]
+        , br [] []
         , div [ Attr.class "CardView" ] <| sessionsWithTimeview model <| List.map (sessionToSessionWithTime model.zone model.time) model.sessions
-        , div [ Attr.class "ListView" ] <| currentView model.sessions
         ]
 
 
