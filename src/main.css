@@ -58,6 +58,7 @@ body {
   align-items: center;
   height: 100%;
   background: var(--background-lighter);
+  color: var(--foreground);
 }
 
 .box {
@@ -124,7 +125,6 @@ p.location {
   background-size: 300% 300%;
 }
 
-
 @keyframes animatedgradient {
   0% {
     background-position: 0% 50%;
@@ -137,4 +137,12 @@ p.location {
   100% {
     background-position: 0% 50%;
   }
+}
+
+.time-930AM:nth-of-type(5) {
+  margin-bottom: 3rem;
+}
+
+.time-1020AM:nth-of-type(5) {
+  margin-bottom: 3rem;
 }

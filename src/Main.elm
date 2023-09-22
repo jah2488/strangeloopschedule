@@ -4,6 +4,7 @@ import Browser
 import Html exposing (..)
 import Html.Attributes as Attr
 import Maybe exposing (withDefault)
+import String exposing (fromInt)
 import Task
 import Time exposing (millisToPosix, toHour, toMinute)
 
@@ -46,6 +47,7 @@ init =
             , Session "9:30 AM - 10:10 AM" "/2023/experimentation-putting-research-papers-into-prod.html" "Experimentation: putting research papers into prod" "Leemay Nassery" "US Grand DE"
             , Session "9:30 AM - 10:10 AM" "/2023/using-data-driven-metrics-to-anticipate-and-prevent-security-incidents.html" "Using data-driven metrics to anticipate and prevent security incidents" "Caitlin Buckshaw" "US Grand ABC"
             , Session "9:30 AM - 10:10 AM" "/2023/playable-quotes-for-game-boy-games.html" "Playable Quotes for Game Boy Games" "Joël Franušić, Adam Smith" "US Regency AB"
+            , Session "9:30 AM - 10:10 AM" "/2023/ectype---bringing-type-safety-and-more-to-vanilla-javascript.html" "Ectype - bringing type safety (and more!) to vanilla JavaScript" "Holly Wu" "US Regency C"
             , Session "10:20 AM - 11:00 AM" "/2023/the-economics-of-programming-languages.html" "The Economics of Programming Languages" "Evan Czaplicki" "US Grand F"
             , Session "10:20 AM - 11:00 AM" "/2023/war-time-proofs-and-futuristic-programs.html" "War Time Proofs and Futuristic Programs" "Valeria de Paiva" "US Grand DE"
             , Session "10:20 AM - 11:00 AM" "/2023/computational-physics-beyond-the-glass.html" "Computational Physics, Beyond the Glass" "Sam Ritchie" "US Grand ABC"
@@ -112,9 +114,14 @@ view model =
                     "Light"
     in
     div [ Attr.class <| "container " ++ styleMode ]
-        [ h1 [] [ text "Strangeloop 2023 Friday Schedule" ]
+        [ h1 [] [ text "Unofficial Strangeloop 2023 Friday Schedule" ]
+        , p [] [ text <| String.concat [ "There are ", fromInt <| List.length <| sessionsInTheFuture model (List.map (sessionToSessionWithTime model.zone model.time) model.sessions), " sessions left today." ] ]
         , br [] []
-        , div [ Attr.class "CardView" ] <| sessionsWithTimeview model <| List.map (sessionToSessionWithTime model.zone model.time) model.sessions
+        , div
+            [ Attr.class "CardView" ]
+          <|
+            List.map (sessionView model) <|
+                List.map (sessionToSessionWithTime model.zone model.time) model.sessions
         ]
 
 
@@ -246,7 +253,15 @@ timeUntil zone now time =
 
 sessionView : Model -> SessionWithTime -> Html msg
 sessionView model session =
-    div [ Attr.class "session box gradient-border" ]
+    let
+        timeS =
+            String.append "time-" <|
+                String.replace ":" "" <|
+                    String.replace "-" " time-" <|
+                        String.replace " " "" <|
+                            session.session.time
+    in
+    div [ Attr.class <| "session box gradient-border " ++ timeS ]
         [ h3 [ Attr.class "title" ] [ a [ Attr.href <| "https://thestrangeloop.com" ++ session.session.link ] [ text session.session.title ] ]
         , p [ Attr.class "speaker" ] [ text session.session.speaker ]
         , p [ Attr.class "time" ] [ text session.session.time ]
