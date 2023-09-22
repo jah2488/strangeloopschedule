@@ -183,10 +183,8 @@ sessionsInTheFuture : Model -> List SessionWithTime -> List SessionWithTime
 sessionsInTheFuture model sessions =
     List.filter
         (\session ->
-            toHour model.zone session.start
+            toHour model.zone session.end
                 >= toHour model.zone model.time
-                && toMinute model.zone session.start
-                >= toMinute model.zone model.time
         )
         sessions
 
