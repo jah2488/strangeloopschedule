@@ -130,7 +130,8 @@ sessionsWithTimeview model sessions =
                 List.map (sessionView model) sessionsInGroup
         )
     <|
-        groupedByTime sessions
+        groupedByTime <|
+            sessionsInTheFuture model sessions
 
 
 groupedByTime : List SessionWithTime -> List (List SessionWithTime)
@@ -178,18 +179,14 @@ main =
         }
 
 
-sessionsHappeningNow : Model -> List SessionWithTime -> List SessionWithTime
-sessionsHappeningNow model sessions =
+sessionsInTheFuture : Model -> List SessionWithTime -> List SessionWithTime
+sessionsInTheFuture model sessions =
     List.filter
         (\session ->
-            let
-                hourZone =
-                    Time.toHour model.zone
-            in
-            hourZone session.start
-                <= hourZone model.time
-                && hourZone model.time
-                <= hourZone session.end
+            toHour model.zone session.start
+                >= toHour model.zone model.time
+                && toMinute model.zone session.start
+                >= toMinute model.zone model.time
         )
         sessions
 

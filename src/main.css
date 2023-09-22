@@ -52,19 +52,6 @@ a {
   width: 100%;
 }
 
-.container.Dark {
-  --background: #1D1F20;
-  --background-lighter: #2f3234;
-  --foreground: #fff;
-  --link: #96cd4a;
-}
-
-.container.Light {
-  --background: #fff;
-  --foreground: #1D1F20;
-  --link: #f79533;
-}
-
 body {
   display: flex;
   justify-content: center;
