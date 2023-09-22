@@ -1,0 +1,160 @@
+[data-elm-hot="true"] {
+  height: inherit;
+}
+
+body {
+  font-family: 'Source Sans Pro', 'Trebuchet MS', 'Lucida Grande', 'Bitstream Vera Sans', 'Helvetica Neue', sans-serif;
+  margin: 0;
+  text-align: center;
+  color: #293c4b;
+}
+
+h1 {
+  font-size: 30px;
+}
+
+img {
+  margin: 20px 0;
+  max-width: 200px;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Raleway:200');
+
+html,
+body {
+  height: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1D1F20;
+    --background-lighter: #2f3234;
+    --foreground: #fff;
+    --link: #f79533;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #fff;
+    --background-lighter: #d5d5dd;
+    --foreground: #1D1F20;
+    --link: #f79533;
+  }
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* height: 100%; */
+  width: 100%;
+}
+
+.container.Dark {
+  --background: #1D1F20;
+  --background-lighter: #2f3234;
+  --foreground: #fff;
+  --link: #f79533;
+}
+
+.container.Light {
+  --background: #fff;
+  --foreground: #1D1F20;
+  --link: #f79533;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background: var(--background-lighter);
+}
+
+.box {
+  width: 300px;
+  min-height: 170px;
+  color: var(--foreground);
+  font-family: 'Raleway';
+  font-size: 1.2rem;
+  margin: 1rem;
+  padding: 1rem 1.2rem 0.1rem 1.2rem;
+}
+
+.title {
+  flex: 1;
+  display: flex;
+  width: 100%;
+}
+
+.speaker {
+  flex: 1;
+}
+
+p.time {
+  display: flex;
+  font-size: 0.8rem;
+  font-family: monospace;
+  margin: 0;
+  padding: 0;
+  vertical-align: bottom;
+  position: relative;
+  top: 15px;
+  right: 12px;
+}
+
+p.location {
+  font-size: 0.8rem;
+  font-family: monospace;
+  margin: 0;
+  padding: 0;
+  vertical-align: bottom;
+  position: relative;
+  left: 10px;
+  text-align: right;
+}
+
+
+.gradient-border {
+  --borderWidth: 4px;
+  background: var(--background);
+  position: relative;
+  border-radius: var(--borderWidth);
+}
+
+.gradient-border:after {
+  content: '';
+  position: absolute;
+  top: calc(-1 * var(--borderWidth));
+  left: calc(-1 * var(--borderWidth));
+  height: calc(100% + var(--borderWidth) * 2);
+  width: calc(100% + var(--borderWidth) * 2);
+  background: linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #a166ab, #5073b8, #1098ad, #07b39b, #6fba82);
+  border-radius: calc(2 * var(--borderWidth));
+  z-index: -1;
+  animation: animatedgradient 8s ease-in-out alternate infinite;
+  background-size: 300% 300%;
+}
+
+
+@keyframes animatedgradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
