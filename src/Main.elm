@@ -1,7 +1,6 @@
 module Main exposing (..)
 
 import Browser
-import Debug exposing (toString)
 import Html exposing (..)
 import Html.Attributes as Attr
 import Maybe exposing (withDefault)
@@ -103,7 +102,16 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ Attr.class <| "container " ++ toString model.styleMode ]
+    let
+        styleMode =
+            case model.styleMode of
+                Dark ->
+                    "Light"
+
+                Light ->
+                    "Dark"
+    in
+    div [ Attr.class <| "container " ++ styleMode ]
         [ h1 [] [ text "Strangeloop 2023 Friday Schedule" ]
         , div [ Attr.class "CardView" ] <| sessionsWithTimeview model <| List.map (sessionToSessionWithTime model.zone model.time) model.sessions
         , div [ Attr.class "ListView" ] <| currentView model.sessions
