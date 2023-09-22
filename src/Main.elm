@@ -3,8 +3,9 @@ module Main exposing (..)
 import Browser
 import Html exposing (..)
 import Html.Attributes as Attr
+import Html.Events exposing (onClick)
 import Maybe exposing (withDefault)
-import String exposing (fromInt)
+import String exposing (fromInt, toInt)
 import Task
 import Time exposing (millisToPosix, toHour, toMinute)
 
@@ -19,6 +20,7 @@ type alias Model =
     , zone : Time.Zone
     , sessions : List Session
     , styleMode : StyleMode
+    , showAll : Bool
     }
 
 
@@ -41,7 +43,7 @@ type alias Session =
 init : ( Model, Cmd Msg )
 init =
     ( { time = millisToPosix 0
-      , zone = Time.utc
+      , zone = Time.customZone (-6 * 60) []
       , sessions =
             [ Session "9:30 AM - 10:10 AM" "/2023/new-algorithms-for-collaborative-text-editing.html" "New algorithms for collaborative text editing" "Martin Kleppmann" "US Grand F"
             , Session "9:30 AM - 10:10 AM" "/2023/experimentation-putting-research-papers-into-prod.html" "Experimentation: putting research papers into prod" "Leemay Nassery" "US Grand DE"
@@ -66,6 +68,7 @@ init =
             , Session "5:00 PM - 6:30 PM" "/2023/closing-reception-and-signing.html" "Closing Reception and Signing" "Randall Munroe" "Stifel Theatre"
             ]
       , styleMode = Dark
+      , showAll = False
       }
     , Task.perform AdjustTimeZone Time.here
     )
@@ -86,6 +89,7 @@ sessionToSessionWithTime zone now session =
 type Msg
     = Tick Time.Posix
     | AdjustTimeZone Time.Zone
+    | ToggleAll
     | NoOp
 
 
@@ -94,6 +98,9 @@ update msg model =
     case msg of
         AdjustTimeZone zone ->
             ( { model | zone = zone }, Cmd.none )
+
+        ToggleAll ->
+            ( { model | showAll = not model.showAll }, Cmd.none )
 
         Tick newTime ->
             ( { model | time = newTime }, Cmd.none )
@@ -115,43 +122,24 @@ view model =
     in
     div [ Attr.class <| "container " ++ styleMode ]
         [ h1 [] [ text "Unofficial Strangeloop 2023 Friday Schedule" ]
-        , p [] [ text <| String.concat [ "There are ", fromInt <| List.length <| sessionsInTheFuture model (List.map (sessionToSessionWithTime model.zone model.time) model.sessions), " sessions left today." ] ]
+        , button [ Attr.class "toggle", onClick <| ToggleAll ] [ text "Toggle Show All" ]
         , br [] []
         , div
             [ Attr.class "CardView" ]
           <|
             List.map (sessionView model) <|
-                List.map (sessionToSessionWithTime model.zone model.time) model.sessions
-        ]
+                (if model.showAll then
+                    List.map (\x -> x)
 
-
-sessionsWithTimeview : Model -> List SessionWithTime -> List (Html msg)
-sessionsWithTimeview model sessions =
-    List.map
-        (\sessionsInGroup ->
-            let
-                timeS =
-                    String.append "time-" <| String.replace ":" "" <| String.replace "-" " time-" <| String.replace " " "" <| withDefault "0" <| Maybe.andThen (\x -> Just x.session.time) <| List.head sessionsInGroup
-            in
-            div [ Attr.class <| "group " ++ timeS ] <|
-                List.map (sessionView model) sessionsInGroup
-        )
-    <|
-        groupedByTime <|
-            sessionsInTheFuture model sessions
-
-
-groupedByTime : List SessionWithTime -> List (List SessionWithTime)
-groupedByTime sessions =
-    List.map
-        (\session ->
-            List.filter
-                (\s ->
-                    s.session.time == session.session.time
+                 else
+                    sessionsInTheFuture model
                 )
-                sessions
-        )
-        sessions
+                <|
+                    List.map (sessionToSessionWithTime model.zone model.time) model.sessions
+        , footer []
+            [ p [] [ a [ Attr.href "https://github.com/jah2488/strangeloopschedule" ] [ text "written in Elm <3" ] ]
+            ]
+        ]
 
 
 stringToTime : Time.Zone -> Time.Posix -> String -> Time.Posix
@@ -190,8 +178,21 @@ sessionsInTheFuture : Model -> List SessionWithTime -> List SessionWithTime
 sessionsInTheFuture model sessions =
     List.filter
         (\session ->
-            toHour model.zone session.end
-                >= toHour model.zone model.time
+            let
+                end =
+                    session.session.time |> String.right 8 |> String.left 2 |> toInt |> withDefault 0
+
+                r_hour =
+                    toHour model.zone model.time
+
+                hour =
+                    if r_hour > 12 then
+                        r_hour - 12
+
+                    else
+                        r_hour
+            in
+            end > hour
         )
         sessions
 
@@ -237,7 +238,7 @@ timeUntil zone now time =
     else if [ time_h, time_m, time_s ] < [ now_h, now_m, now_s ] then
         let
             minutes =
-                time_m - now_m
+                time_m
 
             hours =
                 now_h - time_h
